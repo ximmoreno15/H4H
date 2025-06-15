@@ -1,0 +1,31 @@
+#!/usr/bin/env python3
+# filtrar_coolers.py
+
+import pandas as pd
+
+# 1. Rutas de los archivos
+COOLERS_CSV   = 'coolers.zip'        # tu archivo grande
+WARNINGS_CSV  = 'warnings.csv'       # ~50 IDs
+OUTPUT_CSV    = 'coolers_con_binary_warning.csv'
+
+# 2. Cargar los datos
+df_coolers  = pd.read_csv(COOLERS_CSV, dtype=str)
+df_warnings = pd.read_csv(WARNINGS_CSV, dtype=str)
+
+# 3. Limpiar y unificar formato de cooler_id
+df_coolers['cooler_id']  = df_coolers['cooler_id'].str.strip()
+df_warnings['cooler_id'] = df_warnings['cooler_id'].str.strip()
+
+# 4. Crear set de IDs con warning
+warning_ids = set(df_warnings['cooler_id'])
+
+# 5. Añadir columna binary_warning: 1 si está en warning_ids, 0 si no
+df_coolers['binary_warning'] = df_coolers['cooler_id'].isin(warning_ids).astype(int)
+
+# 6. Guardar resultado
+df_coolers.to_csv(OUTPUT_CSV, index=False)
+
+# 7. Informe rápido por consola
+print(f'Proceso completo. Archivo generado: {OUTPUT_CSV}')
+print('Distribución de binary_warning:')
+print(df_coolers['binary_warning'].value_counts(normalize=True).map(lambda x: f"{x:.2%}"))

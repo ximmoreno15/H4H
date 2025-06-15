@@ -54,5 +54,3 @@ coolers_coolerID = coolers[:,0]
 sales_coolerID = sales[:,0]
 warning_coolerID = warning[:,0]
 
-# concatenar las columnas de cooler_ID de coolers, sales y warning
-condensed_coolerID = np.concatenate((coolers_coolerID, sales_coolerID, warning_coolerID))
